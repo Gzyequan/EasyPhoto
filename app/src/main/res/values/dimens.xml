@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ep_main_item_width">138dp</dimen>
+    <dimen name="ep_main_item_height">85dp</dimen>
+    <dimen name="ep_main_item_marginLeft">10dp</dimen>
+    <dimen name="ep_main_item_marginTop">10dp</dimen>
+    <dimen name="ep_main_item_marginBottom">10dp</dimen>
+    <dimen name="ep_main_item_text_size">15sp</dimen>
+</resources>

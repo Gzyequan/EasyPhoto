@@ -10,9 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-
         <activity android:name=".SplashActivity" />
-
         <activity
             android:name=".LaunchActivity"
             android:theme="@style/AppTheme">
@@ -23,15 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.LongRunningService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <receiver
-            android:name=".receiver.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true" />
+        <activity android:name=".CameraActivity"></activity>
     </application>
 
 </manifest>

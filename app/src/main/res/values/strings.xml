@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EasyPhoto</string>
+    <string name="ep_main_item_photo_beautify">图片美化</string>
+    <string name="ep_main_item_photo_jigsaw">一键拼图</string>
+    <string name="ep_main_item_photo_matting">魔法抠图</string>
+    <string name="ep_main_item_photo_canvas">简单画布</string>
+    <string name="ep_main_item_photo_blank">印象留白</string>
+    <string name="ep_main_item_photo_wallpaper">壁纸制作</string>
+    <string name="ep_main_item_photo_gif">GIF制作</string>
+    <string name="ep_main_open_camera">相机</string>
 </resources>
