@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         });
                 break;
             case R.id.ep_main_setting:
-
+                Toast.makeText(this, "设置", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
