@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         openCameraAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
+                Toast.makeText(MainActivity.this, "df", Toast.LENGTH_SHORT).show();
             }
 
             @Override
