@@ -1,8 +1,11 @@
 package com.yequan.easyphoto;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,11 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.yequan.easyphoto.utils.permission.CheckPermission;
+import com.yequan.easyphoto.utils.permission.PermissionListener;
+import com.yequan.easyphoto.utils.permission.PermissionSettingHelp;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView backgroundImage;
+    private ImageView backgroundImage, mainSetting;
     private RelativeLayout beautify, jigsaw, matting, simpleCanvas, blank, wallpaper, gifMaker;
     private LinearLayout openCamera;
     private int[] backgroundIds = {R.drawable.girl_1, R.drawable.girl_2, R.drawable.girl_4};
@@ -42,6 +51,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initView() {
         backgroundImage = (ImageView) findViewById(R.id.ep_mainactivity_bg);
+        mainSetting = (ImageView) findViewById(R.id.ep_main_setting);
         beautify = (RelativeLayout) findViewById(R.id.ep_rl_beautify);
         jigsaw = (RelativeLayout) findViewById(R.id.ep_rl_jigsaw);
         matting = (RelativeLayout) findViewById(R.id.ep_rl_matting);
@@ -54,36 +64,59 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initEvent() {
+        mainSetting.setOnClickListener(this);
         openCamera.setOnClickListener(this);
     }
+
+    private PermissionListener permissionListener;
+    private String[] permissions = {
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ep_main_item_ll_openCamera:
-                Animation openCameraAnimation = AnimationUtils.loadAnimation(this, R.anim.button_open_camera_animation);
-                openCamera.startAnimation(openCameraAnimation);
-//                Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
-                final Intent intentCamera = new Intent(this, CameraActivity.class);
-                openCameraAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+                permissionListener =
+                        new CheckPermission(this).requestRuntimePermission(permissions, this, new PermissionListener() {
+                            @Override
+                            public void onGranted() {
+                                intentToCameraActivity();
+                            }
 
-                    }
+                            @Override
+                            public void onDenied(List<String> deniedPermission) {
+                                PermissionSettingHelp.showHelpDialog(MainActivity.this);
+                            }
+                        });
+                break;
+            case R.id.ep_main_setting:
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        startActivity(intentCamera);
-                        overridePendingTransition(R.anim.scale_camera_activity_action, R.anim.hold_action);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
                 break;
         }
+    }
+
+    private void intentToCameraActivity() {
+        Animation openCameraAnimation = AnimationUtils.loadAnimation(this, R.anim.button_open_camera_animation);
+        openCamera.startAnimation(openCameraAnimation);
+        final Intent intentCamera = new Intent(this, CameraActivity.class);
+        openCameraAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                startActivity(intentCamera);
+                overridePendingTransition(R.anim.scale_camera_activity_action, R.anim.hold_action);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     private void setItemRandomColor() {
@@ -153,4 +186,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return super.onKeyUp(keyCode, event);
     }
 
+    @TargetApi(23)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {//activity自带方法
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) {
+                    List<String> deniedPermissions = new ArrayList<>();
+                    for (int i = 0; i < grantResults.length; i++) {
+                        int grantResult = grantResults[i];
+                        String permission = permissions[i];
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                            deniedPermissions.add(permission);
+                        }
+                    }
+                    if (deniedPermissions.isEmpty()) {
+                        permissionListener.onGranted();
+                    } else {
+                        permissionListener.onDenied(deniedPermissions);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
