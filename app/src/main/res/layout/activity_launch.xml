@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/girl_1" />
+        android:src="@drawable/ep_background_1" />
 
     <TextView
         android:id="@+id/ep_launcher_timer"

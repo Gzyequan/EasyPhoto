@@ -42,8 +42,8 @@ public class LaunchActivity extends BaseActivity {
                 intent = new Intent(LaunchActivity.this, MainActivity.class);
             }
             startActivity(intent);
-            overridePendingTransition(R.anim.fade_action, R.anim.hold_action);
             finish();
+            overridePendingTransition(R.anim.hold_action, R.anim.fade_action);
         }
         return count;
     }

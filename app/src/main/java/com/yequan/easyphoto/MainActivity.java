@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, GestureDetector.OnGestureListener {
 
     private ImageView backgroundImage, mainSetting;
     private RelativeLayout beautify, jigsaw, matting, simpleCanvas, blank, wallpaper, gifMaker;
     private LinearLayout openCamera;
-    private int[] backgroundIds = {R.drawable.girl_1, R.drawable.girl_2, R.drawable.girl_4};
+    private int[] backgroundIds = {R.drawable.ep_background_1, R.drawable.ep_background_2, R.drawable.ep_background_4};
     private AnimationDrawable animation;
     private int[] itemBackground = {
             R.drawable.bg_item_background_blue, R.drawable.bg_item_background_bright,
@@ -36,11 +38,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             R.drawable.bg_item_background_lightblue, R.drawable.bg_item_background_orange,
             R.drawable.bg_item_background_purple, R.drawable.bg_item_background_yellow
     };
+    private GestureDetector detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initBackgroundAnimation();
+        detector = new GestureDetector(this, this);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onAnimationEnd(Animation animation) {
                 startActivity(intentCamera);
-                overridePendingTransition(R.anim.scale_camera_activity_action, R.anim.hold_action);
+                overridePendingTransition(R.anim.camera_activity_enter_action, R.anim.camera_activity_exit_action);
             }
 
             @Override
@@ -212,5 +216,52 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    //将该activity上的触碰事件交给GestureDetector处理
+    public boolean onTouchEvent(MotionEvent me) {
+        return detector.onTouchEvent(me);
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        float minMove = 120;        //最小滑动距离
+        float minVelocity = 0;     //最小滑动速度
+        float beginY = e1.getY();
+        float endY = e2.getY();
+
+        if ((beginY - endY > minMove && Math.abs(velocityY) > minVelocity) //上滑
+                || (endY - beginY > minMove && Math.abs(velocityY) > minVelocity)) {  //下滑
+            Intent intentCamera = new Intent(this, CameraActivity.class);
+            startActivity(intentCamera);
+            overridePendingTransition(R.anim.hold_action, R.anim.fade_action);
+        }
+        return false;
     }
 }

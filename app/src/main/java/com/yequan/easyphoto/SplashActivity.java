@@ -93,8 +93,8 @@ public class SplashActivity extends BaseActivity {
                 PreferencesUtil.getPreferences().putBoolean(SplashActivity.this, "IS_FIRST_LAUNCH", false);
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.scale_action, R.anim.fade_action);
                 finish();
+                overridePendingTransition(R.anim.camera_activity_enter_action, R.anim.camera_activity_exit_action);
             }
         });
     }
