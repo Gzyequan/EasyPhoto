@@ -184,4 +184,11 @@
             android:textColor="@color/colorWhite" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/ep_camera_enter_animation_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff000000"
+        android:visibility="gone" />
+
 </FrameLayout>

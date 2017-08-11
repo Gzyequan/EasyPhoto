@@ -30,6 +30,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView backgroundImage, mainSetting;
     private RelativeLayout beautify, jigsaw, matting, simpleCanvas, blank, wallpaper, gifMaker;
     private LinearLayout openCamera;
+    private View animationCover;
     private int[] backgroundIds = {R.drawable.ep_background_1, R.drawable.ep_background_2, R.drawable.ep_background_4};
     private AnimationDrawable animation;
     private int[] itemBackground = {
@@ -64,6 +65,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         wallpaper = (RelativeLayout) findViewById(R.id.ep_rl_wallpaper);
         gifMaker = (RelativeLayout) findViewById(R.id.ep_rl_gif);
         openCamera = (LinearLayout) findViewById(R.id.ep_main_item_ll_openCamera);
+        animationCover = findViewById(R.id.ep_camera_enter_animation_cover);
     }
 
     @Override
@@ -107,7 +109,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         openCameraAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                Toast.makeText(MainActivity.this, "df", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -219,10 +220,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     //将该activity上的触碰事件交给GestureDetector处理
-    public boolean onTouchEvent(MotionEvent me) {
-        return detector.onTouchEvent(me);
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                animationCover.setAlpha(0);
+                animationCover.setVisibility(View.GONE);
+                break;
+        }
+        return detector.onTouchEvent(event);
+        //优化MainActivity滑动屏幕切换至CameraActivity动画
     }
-
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -241,23 +248,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        float alpha = 0;
+        float scrollDistance = Math.abs(e2.getY() - e1.getY());
+        alpha = scrollDistance >= minMove ? 1 : (scrollDistance / minMove);
+        animationCover.setVisibility(View.VISIBLE);
+        animationCover.setAlpha(alpha);
         return false;
     }
 
     @Override
     public void onLongPress(MotionEvent e) {
-
     }
+
+    //最小滑动距离
+    float minMove = 400;
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        float minMove = 120;        //最小滑动距离
         float minVelocity = 0;     //最小滑动速度
-        float beginY = e1.getY();
-        float endY = e2.getY();
-
-        if ((beginY - endY > minMove && Math.abs(velocityY) > minVelocity) //上滑
-                || (endY - beginY > minMove && Math.abs(velocityY) > minVelocity)) {  //下滑
+        float scrollDistance = Math.abs(e2.getY() - e1.getY());
+        if (scrollDistance > minMove && Math.abs(velocityY) > minVelocity) {
             Intent intentCamera = new Intent(this, CameraActivity.class);
             startActivity(intentCamera);
             overridePendingTransition(R.anim.hold_action, R.anim.fade_action);
