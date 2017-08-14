@@ -228,7 +228,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
         return detector.onTouchEvent(event);
-        //优化MainActivity滑动屏幕切换至CameraActivity动画
     }
 
     @Override

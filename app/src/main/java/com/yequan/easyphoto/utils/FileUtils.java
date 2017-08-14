@@ -1,19 +1,38 @@
 package com.yequan.easyphoto.utils;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 
+import com.yequan.easyphoto.constant.Constant;
+
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Administrator on 2017/6/7 0007.
  */
 
 public class FileUtils {
+
+    public interface SavePhotoListener {
+        public void onStart();
+
+        public void onSuccess(byte[] data, String photoName);
+
+        public void onError();
+    }
+
     //从sh脚本中加载shader内容的方法
     public static String loadFromAssets(String fileName, Resources r) {
         String result = null;
@@ -54,5 +73,70 @@ public class FileUtils {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    private static String storagePath = "";
+
+    private static String initPath() {
+        if (storagePath.equals("")) {
+            storagePath = Constant.PHOTO_PATH;
+            File f = new File(storagePath);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+        }
+        return storagePath;
+    }
+
+    public static boolean savePhoto(Bitmap b, String photoName) {
+        boolean compress = false;
+        String path = initPath();
+        String jpegName = path + "/" + photoName + ".jpg";
+        try {
+            FileOutputStream fout = new FileOutputStream(jpegName);
+            BufferedOutputStream bos = new BufferedOutputStream(fout);
+            compress = b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            Log.i(TAG, "save bitmap error");
+            e.printStackTrace();
+        }
+        return compress;
+    }
+
+    public static void savePhoto(final byte[] data, final SavePhotoListener listener) {
+
+        new AsyncTask<Void, Boolean, Boolean>() {
+            Bitmap bitmap = null;
+            String photoName = null;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                listener.onStart();
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                if (null != bitmap) {
+                    Bitmap rotateBitmap = ImageUtil.getRotateBitmap(bitmap, 90.0f);
+                    photoName = TimeUtil.getCurrentTimeMillis() + "";
+                    return savePhoto(rotateBitmap, photoName);
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                if (aBoolean) {
+                    listener.onSuccess(data, photoName);
+                } else {
+                    listener.onError();
+                }
+            }
+        }.execute();
     }
 }

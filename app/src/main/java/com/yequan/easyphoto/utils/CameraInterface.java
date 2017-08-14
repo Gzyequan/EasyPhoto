@@ -33,6 +33,10 @@ public class CameraInterface {
         public void cameraOpenedError(Throwable throwable);
     }
 
+    public interface PhotoDataTransferListener {
+        public void onSend(byte[] data);
+    }
+
 
     private CameraInterface(Context context) {
         this.mContext = context;
@@ -111,6 +115,29 @@ public class CameraInterface {
             mCamera = null;
         }
         return mCameraInterface;
+    }
+
+    public CameraInterface doTakePicture(final PhotoDataTransferListener photoDataTransferListener) {
+        if (null != mCamera && isPreviewing) {
+            mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] data, Camera camera) {
+                    if (null != data) {
+                        isPreviewing = false;
+                        mCamera.stopPreview();
+                        photoDataTransferListener.onSend(data);
+                    }
+                }
+            });
+        }
+        return mCameraInterface;
+    }
+
+    public void restartPreview() {
+        if (!isPreviewing && null != mCamera) {
+            isPreviewing = true;
+            mCamera.startPreview();
+        }
     }
 
     public CameraInterface doGetPreviewData(PreviewCallback previewCallback) {

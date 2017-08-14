@@ -5,5 +5,14 @@
     <dimen name="ep_main_item_marginLeft">10dp</dimen>
     <dimen name="ep_main_item_marginTop">10dp</dimen>
     <dimen name="ep_main_item_marginBottom">10dp</dimen>
+
+    <dimen name="ep_camera_15dp">15dp</dimen>
+    <dimen name="ep_camera_30dp">30dp</dimen>
+
     <dimen name="ep_main_item_text_size">15sp</dimen>
+    <dimen name="ep_camera_button_radius">50dp</dimen>
+    <dimen name="ep_camera_button_size">75dp</dimen>
+
+    <dimen name="ep_camera_photo_choose">45dp</dimen>
+
 </resources>

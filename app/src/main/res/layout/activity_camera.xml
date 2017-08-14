@@ -22,8 +22,64 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_margin="@dimen/ep_camera_15dp"
         android:src="@mipmap/ep_camera_exit" />
+
+    <ImageView
+        android:id="@+id/ep_camera_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/ep_camera_15dp"
+        android:src="@mipmap/camera_switch" />
+
+    <ImageView
+        android:id="@+id/ep_camera_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/ep_camera_15dp"
+        android:layout_toLeftOf="@id/ep_camera_switch"
+        android:src="@mipmap/camera_setting" />
+
+    <Button
+        android:id="@+id/ep_camera_take_photo"
+        android:layout_width="@dimen/ep_camera_button_size"
+        android:layout_height="@dimen/ep_camera_button_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/ep_camera_30dp"
+        android:background="@drawable/ep_shape_camera_take_view" />
+
+    <RelativeLayout
+        android:id="@+id/ep_camera_photo_choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorTransparency"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ep_camera_photo_abandon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/ep_camera_photo_choose"
+            android:background="@drawable/ep_shape_camera_photo_abandon"
+            android:padding="@dimen/ep_camera_15dp"
+            android:src="@mipmap/ep_camera_photo_abandon" />
+
+        <ImageView
+            android:id="@+id/ep_camera_photo_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/ep_camera_photo_choose"
+            android:background="@drawable/ep_shape_camera_photo_selected"
+            android:padding="@dimen/ep_camera_15dp"
+            android:src="@mipmap/ep_camera_photo_selected" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
