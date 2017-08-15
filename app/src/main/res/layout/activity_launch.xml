@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yequan.easyphoto.LaunchActivity">
+    tools:context="com.yequan.easyphoto.LauncherActivity">
 
     <ImageView
+        android:id="@+id/ep_launcher_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/ep_background_1" />
+        android:src="@drawable/ep_background_2" />
 
     <TextView
         android:id="@+id/ep_launcher_timer"
